@@ -3,6 +3,7 @@ vim.g.mapleader = " "
 vim.g.leader = " "
 
 -- settings
+require("jtwam.autopairs")
 require("jtwam.cmp")
 require("jtwam.color")
 require("jtwam.format")

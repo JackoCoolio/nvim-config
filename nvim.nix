@@ -17,6 +17,9 @@ in
 }:
 let
   startPlugins = with vimPlugins; [
+    # autopairs
+    mini-pairs
+
     # fuzzy find
     fzf-lua
 
