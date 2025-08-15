@@ -20,6 +20,9 @@ let
     # autopairs
     mini-pairs
 
+    # diagnostics
+    trouble-nvim
+
     # fuzzy find
     fzf-lua
 
@@ -82,6 +85,8 @@ symlinkJoin {
         --add-flags "${./init.lua}" \
         --add-flags --cmd \
         --add-flags "'set packpath^=${packpath} | set runtimepath^=${packpath}'"
+
+      ln -s $out/bin/nvim $out/bin/vim
     '';
 
   passthru = { inherit packpath path; };
