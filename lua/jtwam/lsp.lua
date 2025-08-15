@@ -1,6 +1,13 @@
-local function create_lsp_mappings(buffer, map)
+local function create_lsp_mappings(map)
+	local trouble = require("trouble")
 	map("n", "<leader>rn", vim.lsp.buf.rename, "rename symbol")
-	map("n", "gr", vim.lsp.buf.references, "references")
+	map("n", "gr", function()
+		trouble.open({
+			mode = "lsp_references",
+			focus = true,
+			auto_refresh = false,
+		})
+	end, "references")
 	map("n", "gd", vim.lsp.buf.definition, "goto definition")
 	map("n", "gh", vim.lsp.buf.hover, "hover symbol")
 	map("n", "gl", vim.diagnostic.open_float, "show diagnostics")
@@ -10,11 +17,12 @@ local function init_buffer(event)
 	local function map(mode, lhs, rhs, desc)
 		vim.keymap.set(mode, lhs, rhs, {
 			desc = "lsp: " .. desc,
-			buffer = buffer,
+			buffer = event.buf,
 		})
 	end
 
-	create_lsp_mappings(event.buf, map)
+	create_lsp_mappings(map)
+	create_lsp_mappings(map)
 
 	local client = vim.lsp.get_client_by_id(event.data.client_id)
 	if client == nil then
@@ -57,6 +65,20 @@ local function init_buffer(event)
 		end, "toggle inlay hints")
 	end
 end
+
+-- delete nvim default LSP keymaps - I don't like them
+local function delete_keymap(mode, lhs)
+	for _, m in ipairs(type(mode) == "string" and { mode } or mode) do
+		if vim.fn.maparg(lhs, m) ~= "" then
+			vim.keymap.del(m, lhs)
+		end
+	end
+end
+delete_keymap({ "n", "x" }, "gra")
+delete_keymap("n", "gri")
+delete_keymap("n", "grn")
+delete_keymap("n", "grr")
+delete_keymap("n", "grt")
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("lsp", { clear = true }),

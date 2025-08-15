@@ -6,6 +6,7 @@ vim.g.leader = " "
 require("jtwam.autopairs")
 require("jtwam.cmp")
 require("jtwam.color")
+require("jtwam.diagnostics")
 require("jtwam.format")
 require("jtwam.fuzzy")
 require("jtwam.icons")
