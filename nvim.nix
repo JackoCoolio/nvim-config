@@ -40,6 +40,9 @@ let
     nvim-lspconfig
     blink-cmp
 
+    # statusline
+    lualine-nvim
+
     # colorscheme
     catppuccin-nvim
     sonokai
