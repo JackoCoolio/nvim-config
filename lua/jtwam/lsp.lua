@@ -1,3 +1,53 @@
+local lua_runtime_path = vim.split(package.path, ";")
+table.insert(lua_runtime_path, "lua/?.lua")
+table.insert(lua_runtime_path, "lua/?/init.lua")
+
+local servers = {
+	gopls = {},
+	lua_ls = {
+		settings = {
+			Lua = {
+				runtime = {
+					version = "LuaJIT",
+					path = lua_runtime_path,
+				},
+				diagnostics = {
+					globals = { "vim" },
+				},
+				workspace = {
+					library = vim.api.nvim_get_runtime_file("", true),
+					checkThirdParty = false,
+				},
+				completion = {
+					callSnippet = "Disable",
+					keywordSnippet = "Disable", -- TODO: *completely* disable?
+				},
+				hint = {
+					enable = true,
+				},
+				telemetry = {
+					enable = true,
+				},
+			},
+		},
+	},
+	nixd = {
+		nixpkgs = {
+			expr = "import <nixpkgs> {}",
+		},
+		options = {
+			nixos = {
+				expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.evergreen.options',
+			},
+			home_manager = {
+				expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."jtwam@evergreen".options',
+			},
+		},
+	},
+	vtsls = {},
+	zls = {},
+}
+
 local function create_lsp_mappings(map)
 	local trouble = require("trouble")
 	map("n", "<leader>rn", vim.lsp.buf.rename, "rename symbol")
@@ -110,56 +160,6 @@ vim.diagnostic.config({
 })
 
 local capabilities = require("blink.cmp").get_lsp_capabilities()
-
-local lua_runtime_path = vim.split(package.path, ";")
-table.insert(lua_runtime_path, "lua/?.lua")
-table.insert(lua_runtime_path, "lua/?/init.lua")
-
-local servers = {
-	gopls = {},
-	nixd = {
-		nixpkgs = {
-			expr = "import <nixpkgs> {}",
-		},
-		options = {
-			nixos = {
-				expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.evergreen.options',
-			},
-			home_manager = {
-				expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."jtwam@evergreen".options',
-			},
-		},
-	},
-	lua_ls = {
-		settings = {
-			Lua = {
-				runtime = {
-					version = "LuaJIT",
-					path = lua_runtime_path,
-				},
-				diagnostics = {
-					globals = { "vim" },
-				},
-				workspace = {
-					library = vim.api.nvim_get_runtime_file("", true),
-					checkThirdParty = false,
-				},
-				completion = {
-					callSnippet = "Disable",
-					keywordSnippet = "Disable", -- TODO: *completely* disable?
-				},
-				hint = {
-					enable = true,
-				},
-				telemetry = {
-					enable = true,
-				},
-			},
-		},
-	},
-	vtsls = {},
-	zls = {},
-}
 
 local lsp = require("lspconfig")
 local flags = {
