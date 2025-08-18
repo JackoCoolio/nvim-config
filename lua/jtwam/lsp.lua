@@ -44,6 +44,7 @@ local servers = {
 			},
 		},
 	},
+	roc_ls = {},
 	vtsls = {},
 	zls = {},
 }
