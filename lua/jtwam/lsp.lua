@@ -3,6 +3,7 @@ table.insert(lua_runtime_path, "lua/?.lua")
 table.insert(lua_runtime_path, "lua/?/init.lua")
 
 local servers = {
+	clangd = {},
 	gopls = {},
 	lua_ls = {
 		settings = {
