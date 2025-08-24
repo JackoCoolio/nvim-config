@@ -93,6 +93,8 @@ symlinkJoin {
     '';
 
   passthru = { inherit packpath path; };
+
+  meta.mainProgram = "nvim";
 }
 
 # Adapted from https://ayats.org/blog/neovim-wrapper
